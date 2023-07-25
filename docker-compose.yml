@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  db:
+    image: postgres
+    container_name: db_tourism
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=tourism
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    container_name: web_tourism
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_NAME=tourism
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - db
+volumes:
+  pgdata:
